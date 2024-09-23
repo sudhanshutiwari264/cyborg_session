@@ -1,116 +1,225 @@
-**Script: Mastering Git, GitHub, and Open Source**
+### **Step 1: The Setup - Mission Control System**
+
+Our task is to build a **Mission Control System** to manage the astronauts’ data on a space mission. Each astronaut has a name, role, and an ID. We will create, update, and delete their information using an API. We’ll use **Node.js** with **Express.js** for the backend and test it using **Postman**.
+
+#### **Initialize the Project**
+In your terminal, type the following commands:
+
+1. **Create a new Node.js project**:
+   ```bash
+   npm init -y
+   ```
+
+2. **Install Express.js**:
+   ```bash
+   npm install express --save
+   ```
+
+3. **Optional: Install Nodemon** to auto-restart the server:
+   ```bash
+   npm install -g nodemon
+   ```
 
 ---
 
-**Introduction (5 minutes):**
+### **Step 2: Creating the Server**
 
-Namaste everyone! I am Sudhanshu Tiwari, and I'm excited to welcome you to our "Git-Init" session. Today, we're diving into the fascinating world of version control, collaborative development, and the joy of contributing to open source projects.
+Create a file called `server.js`. This is where we'll write the code to handle the astronauts’ data for our space mission.
 
-Before we jump in, let me share a bit about myself. I am passionate about software development, and my journey in the tech world has led me to explore the wonders of version control using Git and the collaborative space of GitHub.
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
 
-You can find out more about me and connect with me on various social platforms through my common links  website: [Sudhanshu Tiwari's Links](https://sudhanshutiwari264.github.io/Links.io/). Feel free to connect, ask questions, and continue the learning beyond this session.
+// Middleware to parse JSON data
+app.use(express.json());
 
-**Introduction to GitHub (5 minutes):**
+// Sample data array to hold astronaut information
+let astronauts = [];
 
-Namaste dosto! Welcome to our "Mastering Git, GitHub, and Open Source" ka safar. Aaj hum explore karenge version control ka duniya, collaborative development aur open-source projects mein contribute karne ka maza.
+// Starting the server
+app.listen(PORT, () => {
+  console.log(`Mission Control API running on port ${PORT}`);
+});
+```
 
----
-
-**Understanding GitHub (5 minutes):**
-
-GitHub, folks, is like a social platform for code. Yahaan developers aate hain, collaborate karte hain, aur projects mein contribute karte hain, ek version-controlled code ka hub. Ab, chaliye practical mein aate hain.
-
----
-
-**Git Basics and Commands (50 minutes):**
-
-Chalo, dosto, tayyar ho jao! Hum dive karenge Git mein, woh magical tool jo version control ko asaan banata hai. Chaliye kuch essential commands ko step by step samjhte hain.
-
-1. **Repository Initialization (5 minutes):**
-   ```bash
-   git init
-   ```
-
-   Repository initialize karna hai jaise apne code ke liye ek camp set up karna. `git init` aapka command hai jo version control ko start karta hai aapke project folder mein.
-
-2. **Starting and Cloning Repositories (5 minutes):**
-   ```bash
-   git clone <repository_url>
-   ```
-
-   Agar aap seedhe kisi existing project mein jana chahte hain, toh `git clone` aapki ticket hai. Ye poora repository specified URL se pakad leta hai.
-
-3. **Tracking and Saving Changes (10 minutes):**
-   ```bash
-   git add <filename>
-   git commit -m "Yahan aapki description likho"
-   ```
-
-   Changes karne ke baad, hum `git add` ka use karte hain unhe track karne ke liye, aur `git commit` se unhe permanent save karte hain ek meaningful message ke sath.
-
-4. **Monitoring Changes and Viewing History (10 minutes):**
-   ```bash
-   git status
-   git log
-   ```
-
-   Curious hai kya ho raha hai? `git status` aapko current state ke baare mein batata hai, aur `git log` changes ki detailed history deta hai.
-
-5. **Branching and Merging (10 minutes):**
-   ```bash
-   git branch <branch_name>
-   git checkout <branch_name>
-   git merge <branch_name>
-   ```
-
-   Imagine karo branches ko alag alag plotlines ki tarah ek kahani mein. `git branch` creates them, `git checkout` switches between them, and `git merge` blends changes seamlessly.
-
-6. **Connecting with GitHub (10 minutes):**
-   ```bash
-   git remote add origin https://github.com/sudhanshutiwari264/cyborg_session.git
-   git push -u origin main
-   ```
-
-   GitHub hamara remote hub hai. `git remote add` links our local repo to the GitHub repo, and `git push` sends our changes to GitHub.
-
-7. **Handling Conflicts (5 minutes):**
-   ```bash
-   git pull
-   ```
-
-   Kabhi-kabhi, dusre logon ki changes aapke saath conflict kar sakte hain. `git pull` fetches and merges changes from the remote repository.
+**Story:**  
+The astronauts are getting ready for their space mission, but Mission Control doesn’t have a system to manage their profiles yet. We’ll help them by building this API!
 
 ---
 
-**Introduction to Open Source (5 minutes):**
+### **Step 3: Create (POST) Operation – Adding Astronauts**
 
-Ab tak, humne dekha GitHub kaise code ko manage karta hai. Aakhir mein, chalo explore karte hain Open Source ka duniya.
+The space agency needs to **add new astronauts** to the system. We will use a **POST** request for this.
+
+```javascript
+// Create (POST) - Add a new astronaut
+app.post('/astronauts', (req, res) => {
+  const newAstronaut = {
+    id: astronauts.length + 1,
+    name: req.body.name,
+    role: req.body.role
+  };
+  astronauts.push(newAstronaut);
+  res.status(201).json(newAstronaut);
+});
+```
+
+**Story:**  
+We’re adding new astronauts to the mission crew. Each astronaut has a unique role: commander, pilot, engineer, etc. The API assigns an `ID` automatically based on the number of astronauts in the list.
+
+- **Test in Postman:**
+  - **Method:** POST
+  - **URL:** `http://localhost:3000/astronauts`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "Neil Armstrong",
+      "role": "Commander"
+    }
+    ```
 
 ---
 
-**Open Source Contribution (5 minutes):**
+### **Step 4: Read (GET) Operation – Retrieving Astronauts**
 
-Open Source - isme kya hai woh excitement? Kyun contribute karna itna important hai? Open Source projects public hote hain, koi bhi contribute kar sakta hai. Ye exposure nahi sirf deta hai, balki aapke skills ko bhi badhata hai. GitHub pe hain kai open source projects, bas aapki valuable contribution ka intezaar kar rahe hain.
+Now that the astronauts are in the system, Mission Control needs to **view the crew list**.
+
+```javascript
+// Read (GET) - Get all astronauts
+app.get('/astronauts', (req, res) => {
+  res.status(200).json(astronauts);
+});
+```
+
+**Story:**  
+Mission Control wants to check the astronaut profiles. This **GET** request allows them to see all the astronauts who are currently part of the mission.
+
+- **Test in Postman:**
+  - **Method:** GET
+  - **URL:** `http://localhost:3000/astronauts`
 
 ---
 
-**Advanced GitHub Features (10 minutes):**
+### **Step 5: Update (PUT) Operation – Updating Astronaut Information**
 
-Ab jab aap comfortable feel kar rahe hain, chalo kuch advanced GitHub features explore karte hain:
+Sometimes, an astronaut’s role or mission parameters change. Mission Control needs the ability to **update astronaut details**.
 
-1. **Issues and Projects:**
-   GitHub ka issue tracker tasks, enhancements, aur bugs ko manage karne mein madad karta hai. Projects issues ko effectively organize aur prioritize karne mein help karta hai.
+```javascript
+// Update (PUT) - Update an astronaut by ID
+app.put('/astronauts/:id', (req, res) => {
+  const astronautId = parseInt(req.params.id);
+  const astronaut = astronauts.find(a => a.id === astronautId);
+  
+  if (!astronaut) {
+    return res.status(404).send('Astronaut not found');
+  }
 
-2. **GitHub Actions:**
-   Automate your workflows with GitHub Actions. Define custom CI/CD pipelines to build, test, and deploy your code.
+  astronaut.name = req.body.name || astronaut.name;
+  astronaut.role = req.body.role || astronaut.role;
 
-3. **GitHub Pages:**
-   Showcase your projects or create documentation using GitHub Pages. It's a simple way to host your static content.
+  res.status(200).json(astronaut);
+});
+```
+
+**Story:**  
+During training, **Neil Armstrong** decides to switch roles from commander to **mission specialist**. This PUT request allows Mission Control to update astronaut details.
+
+- **Test in Postman:**
+  - **Method:** PUT
+  - **URL:** `http://localhost:3000/astronauts/1`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "Neil Armstrong",
+      "role": "Mission Specialist"
+    }
+    ```
 
 ---
 
-**Conclusion (5 minutes):**
+### **Step 6: Delete (DELETE) Operation – Removing Astronauts**
 
-Toh mere dosto, aaj humne seekha GitHub kaise kaam karta hai, Git commands ka use kaise karte hain, explore karte hain advanced features ko, aur Open Source mein kaise contribute karte hain. Yaad rakho, best way to learn is by doing. Toh in commands ko practice karo, GitHub ko explore karo, aur shayad kisi open-source project mein contribute karo!
+In case of an astronaut being reassigned or retired from the mission, we need the ability to **remove them from the system**.
 
-Thank you for being a part of this extended session. Happy coding, and keep pushing your code! 🚀
+```javascript
+// Delete (DELETE) - Remove an astronaut by ID
+app.delete('/astronauts/:id', (req, res) => {
+  const astronautId = parseInt(req.params.id);
+  astronauts = astronauts.filter(a => a.id !== astronautId);
+
+  res.status(200).send(`Astronaut with ID ${astronautId} removed.`);
+});
+```
+
+**Story:**  
+Sometimes, unexpected circumstances occur. **An astronaut might retire** before the mission starts, and Mission Control needs to update the system accordingly. This DELETE request removes the astronaut based on their `ID`.
+
+- **Test in Postman:**
+  - **Method:** DELETE
+  - **URL:** `http://localhost:3000/astronauts/1`
+
+---
+
+### **Step 7: Final Code (server.js)**
+
+Here’s the full code for the **Mission Control System** API:
+
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+
+let astronauts = [];
+
+// Create (POST) - Add a new astronaut
+app.post('/astronauts', (req, res) => {
+  const newAstronaut = {
+    id: astronauts.length + 1,
+    name: req.body.name,
+    role: req.body.role
+  };
+  astronauts.push(newAstronaut);
+  res.status(201).json(newAstronaut);
+});
+
+// Read (GET) - Get all astronauts
+app.get('/astronauts', (req, res) => {
+  res.status(200).json(astronauts);
+});
+
+// Update (PUT) - Update an astronaut by ID
+app.put('/astronauts/:id', (req, res) => {
+  const astronautId = parseInt(req.params.id);
+  const astronaut = astronauts.find(a => a.id === astronautId);
+  
+  if (!astronaut) {
+    return res.status(404).send('Astronaut not found');
+  }
+
+  astronaut.name = req.body.name || astronaut.name;
+  astronaut.role = req.body.role || astronaut.role;
+
+  res.status(200).json(astronaut);
+});
+
+// Delete (DELETE) - Remove an astronaut by ID
+app.delete('/astronauts/:id', (req, res) => {
+  const astronautId = parseInt(req.params.id);
+  astronauts = astronauts.filter(a => a.id !== astronautId);
+
+  res.status(200).send(`Astronaut with ID ${astronautId} removed.`);
+});
+
+app.listen(PORT, () => {
+  console.log(`Mission Control API running on port ${PORT}`);
+});
+```
+
+---
+
+### **Conclusion:**
+
+**Mission Control** now has an efficient way to manage astronauts using this API. We built a system to **create**, **read**, **update**, and **delete** astronaut data. This system can be easily expanded to manage more complex data, such as mission status, equipment lists, and even space experiments!
